@@ -22,7 +22,7 @@ std::map<std::string, std::string> parseHRML(int n) {
 
     for (int i = 0; i < n; i++) {
         std::string line, tag, extract;
-        std::getline(cin, line);
+        std::getline(std::cin, line);
         std::stringstream ss(line);
 
         while (std::getline(ss, extract, ' ')) {
@@ -63,7 +63,7 @@ int main() {
 
     std::string query;
     for (int i = 0; i < q; i++) {
-        std::getline(cin, query);
+        std::getline(std::cin, query);
 
         auto itr = m.find(query);
         if (itr != m.end()) {
