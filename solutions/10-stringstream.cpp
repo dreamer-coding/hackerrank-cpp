@@ -36,8 +36,9 @@ int main() {
     std::string str;
     std::cin >> str;
     std::vector<int> integers = parseInts(str);
-    for(int i = 0; i < integers.size(); i++) {
-        std::cout << integers[i] << std::endl;
+    for (int iter : integers) {
+        std::cout << iter << std::endl;
     }
+
     return 0;
 } // end of main
