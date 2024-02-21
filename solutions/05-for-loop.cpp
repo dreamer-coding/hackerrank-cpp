@@ -30,7 +30,7 @@ int main() {
     }; // end lambda
 
     for (auto iter = start; iter <= end; ++iter) {
-        cout << get_output(iter) << endl;
+        std::cout << get_output(iter) << std::endl;
     }
     return 0;
 } // end of main
