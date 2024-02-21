@@ -15,7 +15,7 @@ To explore my solutions, follow these steps:
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/dreamer-coding-555/hackerrank-lang.git
+   git clone https://github.com/dreamer-coding-555/hackerrank-cpp.git
    ```
 
 2. **Browse Solutions:**
