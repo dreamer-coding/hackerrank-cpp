@@ -11,6 +11,9 @@ Description:
 ==============================================================================
 */
 #include <iostream>
+#include <algorithm>
+#include <iterator>
+#include <vector>
 
 int main() {
     size_t size;
