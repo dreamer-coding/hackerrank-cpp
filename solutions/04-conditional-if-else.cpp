@@ -36,7 +36,7 @@ std::string rtrim(const std::string &str) {
 
 int main() {
     std::string n_temp;
-    std::getline(cin, n_temp);
+    std::getline(std::cin, n_temp);
 
     int number = std::stoi(ltrim(rtrim(n_temp)));
 
