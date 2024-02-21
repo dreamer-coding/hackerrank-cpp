@@ -30,7 +30,7 @@ endif
 
 foreach iter : range(solved)
     name = solutions[iter]
-    executable('prog-' + index_str.format(iter + 1), name + '.cpp')
+    executable('prog-' + iter, name + '.cpp')
 endforeach
         """
         with open(os.path.join(solutions_dir, 'meson.build'), 'w') as file:
