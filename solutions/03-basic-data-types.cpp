@@ -27,7 +27,7 @@ int main() {
     std::cout << number << std::endl;
     std::cout << large_number << std::endl;
     std::cout << letter << std::endl;
-    std::cout << fixed << std::setprecision(3) << point << std::endl;
-    std::cout << fixed << std::setprecision(9) << large_point << std::endl;
+    std::cout << std::fixed << std::setprecision(3) << point << std::endl;
+    std::cout << std::fixed << std::setprecision(9) << large_point << std::endl;
     return 0;
 } // end of main
