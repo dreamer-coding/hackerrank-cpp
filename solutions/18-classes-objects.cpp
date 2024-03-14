@@ -38,7 +38,7 @@ public:
 
 int main() {
     int n; // number of students
-    cin >> n;
+    std::cin >> n;
     Student *s = new Student[n]; // an array of n students
     
     for(int i = 0; i < n; i++){
@@ -58,7 +58,7 @@ int main() {
     }
 
     // print result
-    cout << count;
+    std::cout << count;
     
     return 0;
     return 0;
