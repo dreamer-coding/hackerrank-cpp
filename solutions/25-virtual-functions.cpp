@@ -11,10 +11,11 @@ Description:
 ==============================================================================
 */
 #include <iostream>
+#include <string>
 
 class Person {
 protected:
-    string name;
+    std::string name;
     int age;
 public:
     virtual void getdata() {
