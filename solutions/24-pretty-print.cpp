@@ -16,11 +16,11 @@ Description:
 int main() {
     int T; std::cin >> T;
     std::cout << std::setiosflags(std::ios::uppercase);
-    cout << std::setw(0xf) << internal;
+    std::cout << std::setw(0xf) << std::internal;
     while (T--) {
-		    double A; std::cin >> A;
-		    double B; std::cin >> B;
-		    double C; std::cin >> C;
+        double A; std::cin >> A;
+        double B; std::cin >> B;
+        double C; std::cin >> C;
         // Formatting and printing the numbers
         std::cout << std::hex << std::left << std::showbase << std::nouppercase << (long long) A << std::endl;
         std::cout << std::dec << std::right << std::setw(15) << std::setfill('_') << std::fixed << std::setprecision(2) << std::showpos << B << std::endl;
