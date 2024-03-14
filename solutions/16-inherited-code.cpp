@@ -22,8 +22,8 @@ private:
 public:
     BadLengthException(int length) : length_(length) {}
 
-    int what() const noexcept override {
-        return this->length_;
+    const char* what() const noexcept override {
+        return std::to_string(n).c_str();
     }
 };
 
