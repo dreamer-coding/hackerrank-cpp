@@ -23,7 +23,7 @@ public:
     BadLengthException(int length) : length_(length) {}
 
     const char* what() const noexcept override {
-        return std::to_string(n).c_str();
+        return std::to_string(length_).c_str();
     }
 };
 
