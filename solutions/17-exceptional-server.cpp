@@ -26,7 +26,7 @@ public:
 		if(A < 0) {
 			throw std::invalid_argument("A is negative");
 		}
-		vector<int> v(A, 0);
+		std::vector<int> v(A, 0);
 		int real = -1, cmplx = sqrt(-1);
 		if(B == 0) throw 0;
 		real = (A/B)*real;
@@ -40,10 +40,10 @@ public:
 int Server::load = 0;
 
 int main() {
-	int T; cin >> T;
+	int T; std::cin >> T;
 	while(T--) {
 		long long A, B;
-		cin >> A >> B;
+		std::cin >> A >> B;
         try {
             int result = Server::compute(A, B);
             std::cout << result << std::endl;
@@ -55,6 +55,6 @@ int main() {
             std::cout << "Other Exception" << std::endl;
         }
 	}
-	cout << Server::getLoad() << endl;
+	std::cout << Server::getLoad() << std::endl;
 	return 0;
 } // end of main
