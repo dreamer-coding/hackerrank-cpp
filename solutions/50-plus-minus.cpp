@@ -39,13 +39,13 @@ void plusMinus(vector<int> arr)
     uint64_t n;
     cin >> n;
 
-    for (auto iter = 0; iter < arr.size(); iter++)
+    for (auto iter = 0U; iter < arr.size(); iter++)
     {
        cin >> arr[iter];
     } // end for
     auto fr1 = 0.0, fr2 = 0.0, fr3 = 0.0;
 
-    for (auto iter = 0; iter < arr.size(); iter++)
+    for (auto iter = 0U; iter < arr.size(); iter++)
     {
         if (arr[iter] > 0)
         {
