@@ -44,7 +44,7 @@ int CalculateMaxWorkshops(Available_Workshops* ptr) {
     Workshop* workshops = ptr->workshops;
 
     // Sort workshops based on end time using lambda function
-    sort(workshops, workshops + ptr->n, [](const Workshop& w1, const Workshop& w2) {
+    std::sort(workshops, workshops + ptr->n, [](const Workshop& w1, const Workshop& w2) {
         return w1.end_time < w2.end_time;
     });
 
