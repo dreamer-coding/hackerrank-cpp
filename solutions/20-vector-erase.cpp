@@ -23,7 +23,7 @@ int main() {
         std::cin >> vect[iter];
     }
 
-    int remove_position, erase_start, erase_end;
+    long unsigned int remove_position, erase_start, erase_end;
     std::cin >> remove_position >> erase_start >> erase_end;
 
     // Remove element at the specified position
