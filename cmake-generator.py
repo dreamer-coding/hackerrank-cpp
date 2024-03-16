@@ -9,6 +9,8 @@ class CMakeScriptGenerator:
 cmake_minimum_required(VERSION 3.0)
 project({self.project_name} LANGUAGES CXX)
 
+set(CMAKE_CXX_STANDARD 17)
+
 add_subdirectory(solutions)
         """
         with open('CMakeLists.txt', 'w') as file:
