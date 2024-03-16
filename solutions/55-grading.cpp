@@ -28,7 +28,7 @@ string rtrim(const string &);
 //
 vector<int> gradingStudents(vector<int> grades)
 {
-    for (auto iter = 0; iter < grades.size(); iter++)
+    for (auto iter = 0U; iter < grades.size(); iter++)
     {
         if (grades[iter] >= 38)
         {
