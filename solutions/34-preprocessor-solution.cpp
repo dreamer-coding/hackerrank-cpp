@@ -46,7 +46,7 @@ int main(){
 	  int mn = INF;
 	  int mx = -INF;
 	  foreach(v, i) {
-		    minimum(mn, v[I]);
+		    minimum(mn, v[i]);
 		    maximum(mx, v[i]);
   	}
 	  int ans = mx - mn;
