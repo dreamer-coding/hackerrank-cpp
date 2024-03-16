@@ -6,7 +6,7 @@ class MesonScriptGenerator:
 
     def generate_source_build_script(self):
         source_script = f"""
-project('{self.project_name}', 'cpp')
+project('{self.project_name}', 'cpp', default_options: ['cpp_std=c++17'])
 
 subdir('solutions')
         """
