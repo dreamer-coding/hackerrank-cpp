@@ -32,7 +32,7 @@ int diagonalDifference(vector<vector<int>> arr)
     auto sum2 = 0;
     auto col = 0;
 
-    for (auto row = 0; row < arr.size(); ++row)
+    for (auto row = 0U; row < arr.size(); ++row)
     {
         sum1 += arr[row][col];
         col++;
