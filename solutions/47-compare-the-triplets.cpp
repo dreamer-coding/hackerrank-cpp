@@ -90,7 +90,7 @@ auto main() -> int
 
     vector<int> result = compareTriplets(a, b);
 
-    for (int i = 0; i < result.size(); i++)
+    for (auto i = 0U; i < result.size(); i++)
     {
         fout << result[i];
 
