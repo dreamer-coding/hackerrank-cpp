@@ -30,7 +30,7 @@ vector<string> split(const string &);
 vector<int> compareTriplets(vector<int> a, vector<int> b)
 {
    auto alice = 0, bob = 0;
-   for (auto iter = 0; iter < a.size(); iter++)
+   for (auto iter = 0U; iter < a.size(); iter++)
    {
        //
        // here we do a check to see if both
