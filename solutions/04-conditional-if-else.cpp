@@ -13,14 +13,16 @@ Description:
 #include <iostream>
 #include <algorithm>
 #include <string>
+#include <functional>
 #include <map>
+#include <cctype>
 
 std::string ltrim(const std::string &str) {
     std::string s(str);
 
     s.erase(
         s.begin(),
-        std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace)))
+        std::find_if(s.begin(), s.end(), [](unsigned char ch) { return !std::isspace(ch); })
     );
     return s;
 }
@@ -29,7 +31,7 @@ std::string rtrim(const std::string &str) {
     std::string s(str);
 
     s.erase(
-        std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(),
+        std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) { return !std::isspace(ch); }).base(),
         s.end()
     );
     return s;
@@ -41,12 +43,12 @@ int main() {
 
     int number = std::stoi(ltrim(rtrim(n_temp)));
 
-    std::map<int ,std::string> numbers = {
-        {0, "zero" }, {1, "one"  },
-        {2, "two"  }, {3, "three"},
-        {4, "four" }, {5, "five" },
-        {6, "six"  }, {7, "seven"},
-        {8, "eight"}, {9, "nine" }
+    std::map<int, std::string> numbers = {
+        {0, "zero"}, {1, "one"},
+        {2, "two"}, {3, "three"},
+        {4, "four"}, {5, "five"},
+        {6, "six"}, {7, "seven"},
+        {8, "eight"}, {9, "nine"}
     };
 
     switch (number) {
