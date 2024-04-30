@@ -21,15 +21,7 @@ string ltrim(const string &);
 string rtrim(const string &);
 vector<string> split(const string &);
 
-//
-// Should add the values from the vector matrix
-// into different summary values and return the
-// absolute diagonal difference.
-//
-// arg-list:
-//  -> arr: the vector being passed in
-//
-int diagonalDifference(vector<vector<int>> arr) {
+int diagonalDifference(vector<vector<int> > arr) {
     auto sum1 = 0;
     auto sum2 = 0;
     auto col = 0;
@@ -37,21 +29,18 @@ int diagonalDifference(vector<vector<int>> arr) {
     for (auto row = 0U; row < arr.size(); ++row) {
         sum1 += arr[row][col];
         col++;
-    } // end for
+    }
 
     col = arr[0].size() - 1;
     for (auto row = 0; col > -1; ++row) {
         sum2 += arr[row][col];
         col--;
-    } // end for
+    }
 
     return abs(sum1 - sum2);
-} // end of func
+}
 
-//
-// main is where all C++ programs start
-//
-auto main() -> int {
+int main() {
     ofstream fout(getenv("OUTPUT_PATH"));
 
     string n_temp;
@@ -59,7 +48,7 @@ auto main() -> int {
 
     int n = stoi(ltrim(rtrim(n_temp)));
 
-    vector<vector<int>> arr(n);
+    vector<vector<int> > arr(n);
 
     for (int i = 0; i < n; i++) {
         arr[i].resize(n);
@@ -72,23 +61,16 @@ auto main() -> int {
         for (int j = 0; j < n; j++) {
             int arr_row_item = stoi(arr_row_temp[j]);
             arr[i][j] = arr_row_item;
-        } // end for
-    } // end for
+        }
+    }
 
     int result = diagonalDifference(arr);
 
     fout << result << "\n";
     fout.close();
     return 0;
-} // end of func
+}
 
-//
-// Should trim the data read in from the test case
-// file being used in this problem.
-//
-// arg-list:
-//  -> str: string reference being passed in for left trim
-//
 string ltrim(const string &str) {
     string s(str);
 
@@ -98,15 +80,8 @@ string ltrim(const string &str) {
     );
 
     return s;
-} // end of func
+}
 
-//
-// Should trim the data read in from the test case
-// file being used in this problem.
-//
-// arg-list:
-//  -> str: string reference being passed in for right trim
-//
 string rtrim(const string &str) {
     string s(str);
 
@@ -116,15 +91,8 @@ string rtrim(const string &str) {
     );
 
     return s;
-} // end of func
+}
 
-//
-// Should split the data into tokens so they can be used
-// in the problem.
-//
-// arg-list:
-//  -> str: string reference being passed in for left trim
-//
 vector<string> split(const string &str) {
     vector<string> tokens;
 
@@ -134,9 +102,9 @@ vector<string> split(const string &str) {
     while ((end = str.find(" ", start)) != string::npos) {
         tokens.push_back(str.substr(start, end - start));
         start = end + 1;
-    } // end while
+    }
 
     tokens.push_back(str.substr(start));
 
     return tokens;
-} // end of func
+}
