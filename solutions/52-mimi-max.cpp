@@ -32,7 +32,7 @@ void miniMaxSum(vector<int> arr)
     auto max = 0ULL;
     auto num = 0ULL;
 
-    for (auto iter = 0; iter < arr.size(); ++iter)
+    for (auto iter = 0U; iter < arr.size(); ++iter)
     {
         num = arr[iter];
         sum += num;
