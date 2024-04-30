@@ -20,10 +20,10 @@ Description:
 struct Node {
     Node* next;
     Node* prev;
-    int value;
-    int key;
-    Node(Node* p, Node* n, int k, int val) : prev(p), next(n), key(k), value(val) {};
-    Node(int k, int val) : prev(nullptr), next(nullptr), key(k), value(val) {};
+    int key; // Changed the order to match initialization in constructor
+    int value; // Changed the order to match initialization in constructor
+    Node(Node* p, Node* n, int k, int val) : next(n), prev(p), key(k), value(val) {}; // Changed the order of initialization
+    Node(int k, int val) : next(nullptr), prev(nullptr), key(k), value(val) {}; // Changed the order of initialization
 };
 
 class Cache {
@@ -131,4 +131,4 @@ int main() {
         }
     }
     return 0;
-} // end of main
+}
