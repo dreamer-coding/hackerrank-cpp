@@ -10,102 +10,85 @@ Description:
     feel free to contact Michael at michaelbrockus@gmail.com.
 ==============================================================================
 */
-#include <bits/stdc++.h>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <algorithm>
 
-using namespace std;
+std::string ltrim(const std::string &);
+std::string rtrim(const std::string &);
+std::vector<std::string> split(const std::string &);
 
-string ltrim(const string &);
-string rtrim(const string &);
-vector<string> split(const string &);
+std::vector<int> compareTriplets(const std::vector<int>& a, const std::vector<int>& b) {
+    int alice = 0, bob = 0;
+    for (auto i = 0U; i < a.size(); ++i) {
+        if (a[i] > b[i]) {
+            ++alice;
+        } else if (a[i] < b[i]) {
+            ++bob;
+        }
+    }
+    return std::vector<int>{alice, bob};
+}
 
-//
-// Should compare the rating between vector array
-// 'a' and vector array 'b', then it returns a
-// vector with the rating values for the two.
-//
-// arg-list:
-//  -> a: first vector being compared
-//  -> b: second vector being compared
-//
-vector<int> compareTriplets(vector<int> a, vector<int> b)
-{
-   auto alice = 0, bob = 0;
-   for (auto iter = 0U; iter < a.size(); iter++)
-   {
-       //
-       // here we do a check to see if both
-       // values from 'a' and 'b' are the same
-       // and if so skip to the next value in
-       // the vector else continue pass the if
-       // and process the two values.
-       //
-       if (a[iter] == b[iter])
-       {
-           continue;
-       } // end if
+int main() {
+    std::ofstream fout(std::getenv("OUTPUT_PATH"));
 
-       //
-       // here we check to see if the value in
-       // 'a' index is greater than 'b' index
-       // if so add one point to alice else add
-       // one to bob's rating.
-       //
-       (a[iter] > b[iter])? alice++ : bob++;
-   } // end for
-   return std::vector<int> {alice, bob};
-} // end func
-
-//
-// main is where all C++ programs start
-//
-auto main() -> int
-{
-    ofstream fout(getenv("OUTPUT_PATH"));
-
-    string a_temp_temp;
-    getline(cin, a_temp_temp);
-
-    vector<string> a_temp = split(rtrim(a_temp_temp));
-
-    vector<int> a(3);
-
-    for (int i = 0; i < 3; i++)
-    {
-        int a_item = stoi(a_temp[i]);
+    std::string a_temp_temp;
+    std::getline(std::cin, a_temp_temp);
+    std::vector<std::string> a_temp = split(rtrim(a_temp_temp));
+    std::vector<int> a(3);
+    for (size_t i = 0; i < 3; ++i) {
+        int a_item = std::stoi(a_temp[i]);
         a[i] = a_item;
-    } // end for
+    }
 
-    string b_temp_temp;
-    getline(cin, b_temp_temp);
-
-    vector<string> b_temp = split(rtrim(b_temp_temp));
-
-    vector<int> b(3);
-
-    for (int i = 0; i < 3; i++)
-    {
-        int b_item = stoi(b_temp[i]);
+    std::string b_temp_temp;
+    std::getline(std::cin, b_temp_temp);
+    std::vector<std::string> b_temp = split(rtrim(b_temp_temp));
+    std::vector<int> b(3);
+    for (size_t i = 0; i < 3; ++i) {
+        int b_item = std::stoi(b_temp[i]);
         b[i] = b_item;
-    } // end for
+    }
 
-    vector<int> result = compareTriplets(a, b);
-
-    for (auto i = 0U; i < result.size(); i++)
-    {
+    std::vector<int> result = compareTriplets(a, b);
+    for (size_t i = 0; i < result.size(); ++i) {
         fout << result[i];
-
-        if (i != result.size() - 1)
-        {
+        if (i != result.size() - 1) {
             fout << " ";
-        } // end if
-    } // end for
-
+        }
+    }
     fout << "\n";
-
     fout.close();
 
     return 0;
-} // end of func
+}
+
+std::string ltrim(const std::string &str) {
+    std::string s(str);
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int ch) { return !std::isspace(ch); }));
+    return s;
+}
+
+std::string rtrim(const std::string &str) {
+    std::string s(str);
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) { return !std::isspace(ch); }).base(), s.end());
+    return s;
+}
+
+std::vector<std::string> split(const std::string &str) {
+    std::vector<std::string> tokens;
+    std::string::size_type start = 0;
+    std::string::size_type end = 0;
+    while ((end = str.find(" ", start)) != std::string::npos) {
+        tokens.push_back(str.substr(start, end - start));
+        start = end + 1;
+    }
+    tokens.push_back(str.substr(start));
+    return tokens;
+}
 
 //
 // Should trim the data read in from the test case
