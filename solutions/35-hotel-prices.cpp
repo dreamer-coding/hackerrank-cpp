@@ -17,13 +17,13 @@ using namespace std;
 
 class HotelRoom {
 public:
-    HotelRoom(int &bedrooms, int &bathrooms) 
+    HotelRoom(int bedrooms, int bathrooms) 
     : bedrooms_(bedrooms), bathrooms_(bathrooms) {}
     
-    // added virtual keyword since it looks like the choice
-    // between what get_price isn't clear to the program
+    virtual ~HotelRoom() {} // Virtual destructor to enable proper cleanup
+
     virtual int get_price() {
-        return 50*bedrooms_ + 100*bathrooms_;
+        return 50 * bedrooms_ + 100 * bathrooms_;
     }
 private:
     int bedrooms_;
@@ -32,10 +32,10 @@ private:
 
 class HotelApartment : public HotelRoom {
 public:
-    HotelApartment(int &bedrooms, int &bathrooms) 
+    HotelApartment(int bedrooms, int bathrooms) 
     :  HotelRoom(bedrooms, bathrooms) {}
 
-    int get_price() {
+    int get_price() override {
         return HotelRoom::get_price() + 100;
     }
 };
