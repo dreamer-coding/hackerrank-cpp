@@ -13,9 +13,10 @@ Description:
 #include <iostream>
 #include <vector>
 #include <fstream>
-#include <string>
 #include <algorithm>
 #include <cctype>
+#include <string>
+#include <ranges>
 
 using namespace std;
 
@@ -23,18 +24,18 @@ string ltrim(const string &);
 string rtrim(const string &);
 vector<string> split(const string &);
 
-int diagonalDifference(vector<vector<int> > arr) {
-    int sum1 = 0;
-    int sum2 = 0;
-    int col = 0;
+int diagonalDifference(vector<vector<int>> arr) {
+    auto sum1 = 0;
+    auto sum2 = 0;
+    auto col = 0;
 
-    for (size_t row = 0; row < arr.size(); ++row) {
+    for (auto row = 0U; row < arr.size(); ++row) {
         sum1 += arr[row][col];
         col++;
     }
 
     col = arr[0].size() - 1;
-    for (int row = 0; col > -1; ++row) {
+    for (auto row = 0; col > -1; ++row) {
         sum2 += arr[row][col];
         col--;
     }
@@ -42,7 +43,7 @@ int diagonalDifference(vector<vector<int> > arr) {
     return abs(sum1 - sum2);
 }
 
-int main() {
+auto main() -> int {
     ofstream fout(getenv("OUTPUT_PATH"));
 
     string n_temp;
@@ -50,7 +51,7 @@ int main() {
 
     int n = stoi(ltrim(rtrim(n_temp)));
 
-    vector<vector<int> > arr(n);
+    vector<vector<int>> arr(n);
 
     for (int i = 0; i < n; i++) {
         arr[i].resize(n);
@@ -75,19 +76,13 @@ int main() {
 
 string ltrim(const string &str) {
     string s(str);
-    s.erase(
-        s.begin(),
-        find_if(s.begin(), s.end(), [](unsigned char ch) { return !isspace(ch); })
-    );
+    s.erase(s.begin(), ranges::find_if(s, [](unsigned char ch) { return !isspace(ch); }));
     return s;
 }
 
 string rtrim(const string &str) {
     string s(str);
-    s.erase(
-        find_if(s.rbegin(), s.rend(), [](unsigned char ch) { return !isspace(ch); }).base(),
-        s.end()
-    );
+    s.erase(ranges::find_if(s.rbegin(), s.rend(), [](unsigned char ch) { return !isspace(ch); }).base(), s.end());
     return s;
 }
 
