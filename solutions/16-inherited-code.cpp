@@ -25,7 +25,8 @@ public:
     const char* what() const noexcept override {
         std::stringstream ss;
         ss << length_;
-        return ss.str().c_str();
+        static std::string message = ss.str(); // Convert to a static string
+        return message.c_str(); // Return the C-string representation
     }
 };
 
