@@ -10,6 +10,7 @@ class CMakeScriptGenerator:
             f"project(\"{self.project_name}\" LANGUAGES CXX)\n\n"
             "set(CMAKE_CXX_STANDARD 20)\n"  # Setting C++20 standard
             "set(CMAKE_GENERATOR Ninja)\n"   # Setting Ninja as the generator
+            "add_definitions(-D_CRT_SECURE_NO_WARNINGS)\n"  # Passing _CRT_SECURE_NO_WARNINGS flag
             "add_subdirectory(solutions)\n"
         )
         with open('CMakeLists.txt', 'w') as file:
