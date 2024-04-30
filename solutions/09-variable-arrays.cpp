@@ -30,7 +30,7 @@ int main() {
 
     for (auto i = 0; i < query; i++) {
         std::cin >> index >> element;
-        if (index >= 0 && index < length && element >= 0 && element < arrays[index].size()) {
+        if (index >= 0 && index < length && element >= 0 && element < static_cast<int>(arrays[index].size())) {
             std::cout << arrays[index][element] << std::endl;
         } // end if
     } // end for
