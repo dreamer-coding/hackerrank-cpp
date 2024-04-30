@@ -14,7 +14,6 @@ Description:
 #include <vector>
 #include <fstream>
 #include <algorithm>
-#include <functional>
 
 using namespace std;
 
@@ -24,11 +23,11 @@ vector<string> split(const string &);
 
 //
 // Should add the values from the vector matrix
-// into diffrent summary values and return the
+// into different summary values and return the
 // absolute diagonal difference.
 //
 // arg-list:
-//  -> ar: the vector being passed in
+//  -> arr: the vector being passed in
 //
 int diagonalDifference(vector<vector<int>> arr) {
     auto sum1 = 0;
@@ -45,8 +44,8 @@ int diagonalDifference(vector<vector<int>> arr) {
         sum2 += arr[row][col];
         col--;
     } // end for
-    auto diff = std::abs(sum1 - sum2);
-    return (diff < 0)? diff = std::abs(diff) : diff;
+
+    return abs(sum1 - sum2);
 } // end of func
 
 //
@@ -88,14 +87,14 @@ auto main() -> int {
 // file being used in this problem.
 //
 // arg-list:
-//  -> str: string refrence being passed in for left trim
+//  -> str: string reference being passed in for left trim
 //
 string ltrim(const string &str) {
     string s(str);
 
     s.erase(
         s.begin(),
-        find_if(s.begin(), s.end(), not1(ptr_fun<int, int>(isspace)))
+        find_if(s.begin(), s.end(), [](unsigned char ch) { return !isspace(ch); })
     );
 
     return s;
@@ -106,13 +105,13 @@ string ltrim(const string &str) {
 // file being used in this problem.
 //
 // arg-list:
-//  -> str: string refrence being passed in for right trim
+//  -> str: string reference being passed in for right trim
 //
 string rtrim(const string &str) {
     string s(str);
 
     s.erase(
-        find_if(s.rbegin(), s.rend(), not1(ptr_fun<int, int>(isspace))).base(),
+        find_if(s.rbegin(), s.rend(), [](unsigned char ch) { return !isspace(ch); }).base(),
         s.end()
     );
 
@@ -124,7 +123,7 @@ string rtrim(const string &str) {
 // in the problem.
 //
 // arg-list:
-//  -> str: string refrence being passed in for left trim
+//  -> str: string reference being passed in for left trim
 //
 vector<string> split(const string &str) {
     vector<string> tokens;
