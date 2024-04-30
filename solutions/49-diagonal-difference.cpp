@@ -10,7 +10,11 @@ Description:
     feel free to contact Michael at michaelbrockus@gmail.com.
 ==============================================================================
 */
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <algorithm>
+#include <functional>
 
 using namespace std;
 
@@ -26,21 +30,18 @@ vector<string> split(const string &);
 // arg-list:
 //  -> ar: the vector being passed in
 //
-int diagonalDifference(vector<vector<int>> arr)
-{
+int diagonalDifference(vector<vector<int>> arr) {
     auto sum1 = 0;
     auto sum2 = 0;
     auto col = 0;
 
-    for (auto row = 0U; row < arr.size(); ++row)
-    {
+    for (auto row = 0U; row < arr.size(); ++row) {
         sum1 += arr[row][col];
         col++;
     } // end for
 
     col = arr[0].size() - 1;
-    for (auto row = 0; col > -1; ++row)
-    {
+    for (auto row = 0; col > -1; ++row) {
         sum2 += arr[row][col];
         col--;
     } // end for
@@ -51,8 +52,7 @@ int diagonalDifference(vector<vector<int>> arr)
 //
 // main is where all C++ programs start
 //
-auto main() -> int
-{
+auto main() -> int {
     ofstream fout(getenv("OUTPUT_PATH"));
 
     string n_temp;
@@ -62,8 +62,7 @@ auto main() -> int
 
     vector<vector<int>> arr(n);
 
-    for (int i = 0; i < n; i++)
-    {
+    for (int i = 0; i < n; i++) {
         arr[i].resize(n);
 
         string arr_row_temp_temp;
@@ -71,8 +70,7 @@ auto main() -> int
 
         vector<string> arr_row_temp = split(rtrim(arr_row_temp_temp));
 
-        for (int j = 0; j < n; j++)
-        {
+        for (int j = 0; j < n; j++) {
             int arr_row_item = stoi(arr_row_temp[j]);
             arr[i][j] = arr_row_item;
         } // end for
@@ -92,8 +90,7 @@ auto main() -> int
 // arg-list:
 //  -> str: string refrence being passed in for left trim
 //
-string ltrim(const string &str)
-{
+string ltrim(const string &str) {
     string s(str);
 
     s.erase(
@@ -111,8 +108,7 @@ string ltrim(const string &str)
 // arg-list:
 //  -> str: string refrence being passed in for right trim
 //
-string rtrim(const string &str)
-{
+string rtrim(const string &str) {
     string s(str);
 
     s.erase(
@@ -130,15 +126,13 @@ string rtrim(const string &str)
 // arg-list:
 //  -> str: string refrence being passed in for left trim
 //
-vector<string> split(const string &str)
-{
+vector<string> split(const string &str) {
     vector<string> tokens;
 
     string::size_type start = 0;
     string::size_type end = 0;
 
-    while ((end = str.find(" ", start)) != string::npos)
-    {
+    while ((end = str.find(" ", start)) != string::npos) {
         tokens.push_back(str.substr(start, end - start));
         start = end + 1;
     } // end while
