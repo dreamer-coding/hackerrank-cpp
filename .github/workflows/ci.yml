@@ -64,11 +64,11 @@ jobs:
         run: python cmake-generator.py
       - name: Configure
         run: |
-          if [[ "${{ matrix.os }}" == "windows-latest" || "${{ matrix.os }}" == "windows-2022" ]]; then
+          if ($env:{{ matrix.os }} -eq "windows-latest" -or $env:{{ matrix.os }} -eq "windows-2022") {
             cmake -B builddir -G "Ninja" -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++
-          else
+          } else {
             cmake -B builddir -G "Ninja"
-          fi
+          }
       - name: Compile
         run: cmake --build builddir
 
