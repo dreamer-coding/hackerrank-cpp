@@ -9,10 +9,21 @@ class CMakeScriptGenerator:
             "cmake_minimum_required(VERSION 3.10)\n"
             f"project(\"{self.project_name}\" LANGUAGES CXX)\n\n"
             "set(CMAKE_CXX_STANDARD 20)\n"  # Setting C++20 standard
-            "set(CMAKE_GENERATOR Ninja)\n"   # Setting Ninja as the generator
-            "add_definitions(-D_CRT_SECURE_NO_WARNINGS)\n"  # Passing _CRT_SECURE_NO_WARNINGS flag
-            "add_subdirectory(solutions)\n"
         )
+
+        if os.name == 'nt':
+            root_script += (
+                "if(CMAKE_CXX_COMPILER_ID MATCHES \"GNU\" OR CMAKE_CXX_COMPILER_ID MATCHES \"Clang\")\n"
+                "    set(CMAKE_GENERATOR Ninja)\n"
+                "elseif(CMAKE_CXX_COMPILER_ID MATCHES \"MSVC\")\n"
+                "    message(FATAL_ERROR \"MSVC is not supported on Windows. Please use MinGW or MSYS.\")\n"
+                "endif()\n"
+            )
+        else:
+            root_script += "set(CMAKE_GENERATOR Ninja)\n"
+
+        root_script += "add_subdirectory(solutions)\n"
+
         with open('CMakeLists.txt', 'w') as file:
             file.write(root_script)
 
