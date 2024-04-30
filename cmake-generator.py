@@ -4,43 +4,34 @@ class CMakeScriptGenerator:
     def __init__(self, project_name='YourProject'):
         self.project_name = project_name
 
-    def generate_source_build_script(self):
-        source_script = f"""
-cmake_minimum_required(VERSION 3.0)
-project({self.project_name} LANGUAGES CXX)
-
-set(CMAKE_CXX_STANDARD 17)
-
-add_subdirectory(solutions)
-        """
+    def generate_root_cmake_file(self):
+        root_script = (
+            "cmake_minimum_required(VERSION 3.10)\n"
+            f"project(\"{self.project_name}\" LANGUAGES CXX)\n\n"
+            "add_subdirectory(solutions)\n"
+        )
         with open('CMakeLists.txt', 'w') as file:
-            file.write(source_script)
+            file.write(root_script)
 
-    def generate_subdirectory_build_script(self):
+    def generate_subdirectory_cmake_files(self):
         solutions_dir = 'solutions'
         solutions = [os.path.splitext(f)[0] for f in os.listdir(solutions_dir) if f.endswith('.cpp')]
         solved = len(solutions)
     
-        subdirectory_script = f"""
-set(solutions {solutions})
-set(solved {solved})
-
-if(solved >= 10)
-    set(index_str "_0")
-else()
-    set(index_str "_0[0:1]")
-endif()
-
-foreach(iter RANGE ${solved})
-    list(GET solutions ${iter} name)
-    add_executable(prog-${{index_str}}${{iter+1}} ${name}.cpp)
-endforeach()
-        """
+        subdirectory_script = (
+            "set(solutions\n"
+            "    " + ";\n    ".join(solutions) + "\n"
+            ")\n\n"
+            "foreach(solution ${solutions})\n"
+            "    add_executable(${solution} ${solution}.cpp)\n"
+            "endforeach()\n"
+        )
+        os.makedirs(solutions_dir, exist_ok=True)
         with open(os.path.join(solutions_dir, 'CMakeLists.txt'), 'w') as file:
             file.write(subdirectory_script)
 
 
 if __name__ == "__main__":
     cmake_generator = CMakeScriptGenerator(project_name='Hacker Rank')
-    cmake_generator.generate_source_build_script()
-    cmake_generator.generate_subdirectory_build_script()
+    cmake_generator.generate_root_cmake_file()
+    cmake_generator.generate_subdirectory_cmake_files()
