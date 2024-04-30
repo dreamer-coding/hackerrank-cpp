@@ -16,6 +16,8 @@ Description:
 #include <vector>
 #include <algorithm>
 
+using namespace std;
+
 std::string ltrim(const std::string &);
 std::string rtrim(const std::string &);
 std::vector<std::string> split(const std::string &);
