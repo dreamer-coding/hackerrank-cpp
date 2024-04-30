@@ -9,6 +9,7 @@ class CMakeScriptGenerator:
             "cmake_minimum_required(VERSION 3.10)\n"
             f"project(\"{self.project_name}\" LANGUAGES CXX)\n\n"
             "set(CMAKE_CXX_STANDARD 20)\n"  # Setting C++20 standard
+            "set(CMAKE_GENERATOR Ninja)\n"   # Setting Ninja as the generator
             "add_subdirectory(solutions)\n"
         )
         with open('CMakeLists.txt', 'w') as file:
