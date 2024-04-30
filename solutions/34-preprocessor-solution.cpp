@@ -14,7 +14,7 @@ Description:
 #define FUNCTION(name, opt) void name(int &x, int y){ !(x opt y) ? x = y : false; }
 
 // Define foreach macro for iterating over vector indices
-#define foreach(v, i) for(int i = 0; i < v.size(); i++)
+#define foreach(v, i) for(auto i = 0U; i < v.size(); i++)
 
 // Define toStr macro for converting to string
 #define toStr(S) #S
