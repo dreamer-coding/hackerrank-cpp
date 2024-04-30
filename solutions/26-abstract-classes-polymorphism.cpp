@@ -52,7 +52,7 @@ public:
         }
 
         Node* newNode = new Node(key, value);
-        if (mp.size() >= cp) { // cache is full
+        if (static_cast<int>(mp.size()) >= cp) { // cache is full
             mp.erase(tail->key); // remove the least recently used node from the map
             remove(tail); // remove it from the linked list
         }
