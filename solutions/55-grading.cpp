@@ -10,7 +10,10 @@ Description:
     feel free to contact Michael at michaelbrockus@gmail.com.
 ==============================================================================
 */
-#include <bits/stdc++.h>
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -102,35 +105,25 @@ auto main() -> int
 // file being used in this problem.
 //
 // arg-list:
-//  -> str: string refrence being passed in for left trim
+//  -> str: string reference being passed in for left trim
 //
 string ltrim(const string &str)
 {
     string s(str);
-
-    s.erase(
-        s.begin(),
-        find_if(s.begin(), s.end(), not1(ptr_fun<int, int>(isspace)))
-    );
-
+    s.erase(s.begin(), find_if(s.begin(), s.end(), [](unsigned char ch) { return !isspace(ch); }));
     return s;
-} // end of func
+}
 
 //
 // Should trim the data read in from the test case
 // file being used in this problem.
 //
 // arg-list:
-//  -> str: string refrence being passed in for right trim
+//  -> str: string reference being passed in for right trim
 //
 string rtrim(const string &str)
 {
     string s(str);
-
-    s.erase(
-        find_if(s.rbegin(), s.rend(), not1(ptr_fun<int, int>(isspace))).base(),
-        s.end()
-    );
-
+    s.erase(find_if(s.rbegin(), s.rend(), [](unsigned char ch) { return !isspace(ch); }).base(), s.end());
     return s;
-} // end of func
+}
