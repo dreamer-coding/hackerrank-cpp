@@ -10,7 +10,11 @@ Description:
     feel free to contact Michael at michaelbrockus@gmail.com.
 ==============================================================================
 */
-#include <bits/stdc++.h>
+#include <string>
+#include <vector>
+#include <fstream>
+#include <algorithm>
+#include <functional>
 
 using namespace std;
 
@@ -25,11 +29,9 @@ vector<string> split(const string &);
 // arg-list:
 //  -> ar: the vector being passed in
 //
-long aVeryBigSum(vector<long> ar)
-{
+long aVeryBigSum(vector<long> ar) {
     auto sum = 0L; // using 0L so auto puts 'long' type in place of int.
-    for (auto iter : ar)
-    {
+    for (auto iter : ar) {
         sum += iter;
     } // end if
     return sum;
@@ -38,8 +40,7 @@ long aVeryBigSum(vector<long> ar)
 //
 // main is where all C++ programs start
 //
-auto main() -> int
-{
+auto main() -> int {
     ofstream fout(getenv("OUTPUT_PATH"));
 
     string ar_count_temp;
@@ -54,8 +55,7 @@ auto main() -> int
 
     vector<long> ar(ar_count);
 
-    for (int i = 0; i < ar_count; i++)
-    {
+    for (int i = 0; i < ar_count; i++) {
         long ar_item = stol(ar_temp[i]);
         ar[i] = ar_item;
     } // end for
@@ -76,8 +76,7 @@ auto main() -> int
 // arg-list:
 //  -> str: string refrence being passed in for left trim
 //
-string ltrim(const string &str)
-{
+string ltrim(const string &str) {
     string s(str);
 
     s.erase(
@@ -95,8 +94,7 @@ string ltrim(const string &str)
 // arg-list:
 //  -> str: string refrence being passed in for right trim
 //
-string rtrim(const string &str)
-{
+string rtrim(const string &str) {
     string s(str);
 
     s.erase(
@@ -114,15 +112,13 @@ string rtrim(const string &str)
 // arg-list:
 //  -> str: string refrence being passed in for left trim
 //
-vector<string> split(const string &str)
-{
+vector<string> split(const string &str) {
     vector<string> tokens;
 
     string::size_type start = 0;
     string::size_type end = 0;
 
-    while ((end = str.find(" ", start)) != string::npos)
-    {
+    while ((end = str.find(" ", start)) != string::npos) {
         tokens.push_back(str.substr(start, end - start));
         start = end + 1;
     } // end while
