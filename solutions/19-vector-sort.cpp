@@ -19,14 +19,14 @@ int main() {
     std::cin >> number;
 
     std::vector<int> vect(number);
-    for (auto iter = 0; iter < number; iter++) {
+    for (int iter = 0; iter < number; iter++) {
         std::cin >> vect[iter];
     }
 
     std::sort(vect.begin(), vect.end());
 
-    for (auto iter : vect) {
-        std::cout << iter << " ";
+    for (int iter = 0; iter < number; iter++) {
+        std::cout << vect[iter] << " ";
     }
     return 0;
 } // end of main
