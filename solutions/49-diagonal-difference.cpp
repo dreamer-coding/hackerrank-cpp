@@ -22,17 +22,17 @@ string rtrim(const string &);
 vector<string> split(const string &);
 
 int diagonalDifference(vector<vector<int> > arr) {
-    auto sum1 = 0;
-    auto sum2 = 0;
-    auto col = 0;
+    int sum1 = 0;
+    int sum2 = 0;
+    int col = 0;
 
-    for (auto row = 0U; row < arr.size(); ++row) {
+    for (size_t row = 0; row < arr.size(); ++row) {
         sum1 += arr[row][col];
         col++;
     }
 
     col = arr[0].size() - 1;
-    for (auto row = 0; col > -1; ++row) {
+    for (int row = 0; col > -1; ++row) {
         sum2 += arr[row][col];
         col--;
     }
@@ -73,29 +73,24 @@ int main() {
 
 string ltrim(const string &str) {
     string s(str);
-
     s.erase(
         s.begin(),
         find_if(s.begin(), s.end(), [](unsigned char ch) { return !isspace(ch); })
     );
-
     return s;
 }
 
 string rtrim(const string &str) {
     string s(str);
-
     s.erase(
         find_if(s.rbegin(), s.rend(), [](unsigned char ch) { return !isspace(ch); }).base(),
         s.end()
     );
-
     return s;
 }
 
 vector<string> split(const string &str) {
     vector<string> tokens;
-
     string::size_type start = 0;
     string::size_type end = 0;
 
@@ -105,6 +100,5 @@ vector<string> split(const string &str) {
     }
 
     tokens.push_back(str.substr(start));
-
     return tokens;
 }
