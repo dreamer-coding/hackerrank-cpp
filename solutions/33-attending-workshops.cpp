@@ -10,10 +10,11 @@ Description:
     feel free to contact Michael at michaelbrockus@gmail.com.
 ==============================================================================
 */
-#include<bits/stdc++.h>
+#include <iostream>
+#include <algorithm>
 
-//Define the structs Workshops and Available_Workshops.
-//Implement the functions initialize and CalculateMaxWorkshops
+// Define the structs Workshops and Available_Workshops.
+// Implement the functions initialize and CalculateMaxWorkshops
 struct Workshop {
     int start_time;
     int duration;
@@ -78,7 +79,9 @@ int main() {
     ptr = initialize(start_time, duration, n);
     std::cout << CalculateMaxWorkshops(ptr) << std::endl;
 
-    delete start_time;
-    delete duration;
+    delete[] start_time;
+    delete[] duration;
+    delete ptr->workshops;
+    delete ptr;
     return 0;
 } // end of main
