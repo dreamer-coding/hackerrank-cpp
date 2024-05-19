@@ -19,7 +19,7 @@ class SkipPlugin:
 
 class Linter:
     def __init__(self, skip_plugin=None):
-        self.errors = []
+        self.errors = {}
         self.skip_plugin = skip_plugin
 
     def lint_file(self, file_path):
@@ -81,7 +81,7 @@ class Linter:
                 if re.match(r'^\s*if\s*\(\s*.*\s*\)\s*{\s*}\s*$', line):
                     errors.append(f"Line {i+1}: Redundant code - empty if statement")
 
-        self.errors.extend(errors)
+        self.errors[file_path] = errors
 
     def lint_directory(self, directory):
         for root, _, files in os.walk(directory):
@@ -108,42 +108,4 @@ class Linter:
             threads.append(thread)
 
         for root, _, files in os.walk(directory):
-            for file in files:
-                if file.endswith(('.c', '.cpp', '.h', '.hpp', '.m', '.mm')):
-                    file_path = os.path.join(root, file)
-                    queue.put(file_path)
-
-        queue.join()
-
-        # Stop workers
-        for _ in range(num_threads):
-            queue.put(None)
-        for thread in threads:
-            thread.join()
-
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python fossil-linter.py <directory>")
-        sys.exit(1)
-
-    target = sys.argv[1]
-    if not os.path.isdir(target):
-        print("Invalid directory.")
-        sys.exit(1)
-
-    # Create and configure linter
-    linter = Linter()
-    skip_plugin = SkipPlugin()
-    skip_plugin.add_skip("subprojects/")  # Skip third-party libraries
-    linter.skip_plugin = skip_plugin
-
-    # Perform linting
-    linter.lint_concurrently(target)
-
-    # Print errors
-    if linter.errors:
-        for error in linter.errors:
-            print(error)
-        sys.exit(1)
-    else:
-        print("No errors found.")
+            for file in files
