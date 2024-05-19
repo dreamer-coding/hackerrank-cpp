@@ -30,7 +30,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.12'
       - name: Install Meson and Ninja
         run: |
           python -m pip install --upgrade pip
@@ -55,7 +55,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.12'
       - name: Install CMake and Ninja
         run: |
           python -m pip install --upgrade pip
@@ -70,3 +70,16 @@ jobs:
           cmake -B builddir -G "Ninja"
       - name: Compile
         run: cmake --build builddir
+
+  linter:
+    name: Running Linter Process
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate build file
+        run: python fossil-linter.py
