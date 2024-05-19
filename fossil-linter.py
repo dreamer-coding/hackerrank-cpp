@@ -4,19 +4,82 @@ import os
 from threading import Thread
 from queue import Queue
 
+class SkipPlugin:
+    def __init__(self):
+        self.skip_list = []
+
+    def add_skip(self, path):
+        self.skip_list.append(path)
+
+    def should_skip(self, path):
+        for skip_path in self.skip_list:
+            if path.startswith(skip_path):
+                return True
+        return False
+
 class Linter:
-    def __init__(self, ignore_patterns=None):
+    def __init__(self, skip_plugin=None):
         self.errors = []
-        self.ignore_patterns = ignore_patterns or []
+        self.skip_plugin = skip_plugin
 
     def lint_file(self, file_path):
+        if self.skip_plugin and self.skip_plugin.should_skip(file_path):
+            return
         errors = []
         with open(file_path, 'r') as file:
             lines = file.readlines()
             for i, line in enumerate(lines):
-                # Check for trailing whitespace, missing semicolon, indentation, etc.
-                # (Same as before)
-                pass
+                # Check for trailing whitespace
+                if re.search(r'\s+$', line):
+                    errors.append(f"Line {i+1}: Trailing whitespace found")
+
+                # Check for missing semicolon
+                if not line.strip().endswith(';') and not line.strip().startswith('#'):
+                    errors.append(f"Line {i+1}: Missing semicolon")
+
+                # Check indentation
+                if re.match(r'^[ \t]*\S', line) and not re.match(r'^[ \t]*[{}]', line):
+                    errors.append(f"Line {i+1}: Indentation issue")
+
+                # Check for consistent indentation (use spaces only)
+                if re.match(r'^\t', line):
+                    errors.append(f"Line {i+1}: Inconsistent indentation, use spaces only")
+
+                # Check for consistent spacing around operators
+                operators = ['+', '-', '*', '/', '=', '==', '!=', '<', '>', '<=', '>=']
+                for op in operators:
+                    if re.search(fr'\S{op}\s', line) or re.search(fr'\s{op}\S', line):
+                        errors.append(f"Line {i+1}: Inconsistent spacing around operator '{op}'")
+
+                # Check line length
+                if len(line.rstrip()) > 80:
+                    errors.append(f"Line {i+1}: Line length exceeds 80 characters")
+
+                # Check for banned constructs: goto and gets
+                if re.search(r'\b(?:goto|gets)\b', line):
+                    errors.append(f"Line {i+1}: Banned construct used (goto or gets)")
+
+                # Check for braces on the same line as control structure
+                if re.search(r'\b(?:if|else|for|while|do)\b', line) and not re.search(r'{\s*$', line):
+                    errors.append(f"Line {i+1}: Braces should be on the same line as control structure")
+
+                # Check for magic numbers
+                if re.search(r'\b\d+\b', line):
+                    errors.append(f"Line {i+1}: Avoid using magic numbers")
+
+                # Enforce consistent naming conventions (example: camelCase)
+                if re.search(r'\b[A-Z][a-zA-Z0-9]*\b', line):
+                    errors.append(f"Line {i+1}: Use camelCase naming convention")
+
+                # Detect unused header files
+                if re.search(r'^#include\s+<([a-zA-Z0-9_]+\.[hH])>', line):
+                    header_file = re.search(r'^#include\s+<([a-zA-Z0-9_]+\.[hH])>', line).group(1)
+                    if not re.search(r'\b{}\b'.format(header_file.split('.')[0]), ''.join(lines[i+1:])):
+                        errors.append(f"Line {i+1}: Unused header file '{header_file}'")
+
+                # Check for redundant code (example: empty if statements)
+                if re.match(r'^\s*if\s*\(\s*.*\s*\)\s*{\s*}\s*$', line):
+                    errors.append(f"Line {i+1}: Redundant code - empty if statement")
 
         self.errors.extend(errors)
 
@@ -25,8 +88,7 @@ class Linter:
             for file in files:
                 if file.endswith(('.c', '.cpp', '.h', '.hpp', '.m', '.mm')):
                     file_path = os.path.join(root, file)
-                    if not self._should_ignore(file_path):
-                        self.lint_file(file_path)
+                    self.lint_file(file_path)
 
     def lint_concurrently(self, directory, num_threads=4):
         queue = Queue()
@@ -49,8 +111,7 @@ class Linter:
             for file in files:
                 if file.endswith(('.c', '.cpp', '.h', '.hpp', '.m', '.mm')):
                     file_path = os.path.join(root, file)
-                    if not self._should_ignore(file_path):
-                        queue.put(file_path)
+                    queue.put(file_path)
 
         queue.join()
 
@@ -60,15 +121,9 @@ class Linter:
         for thread in threads:
             thread.join()
 
-    def _should_ignore(self, file_path):
-        for pattern in self.ignore_patterns:
-            if re.search(pattern, file_path):
-                return True
-        return False
-
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python linter.py <directory>")
+        print("Usage: python fossil-linter.py <directory>")
         sys.exit(1)
 
     target = sys.argv[1]
@@ -76,15 +131,16 @@ if __name__ == "__main__":
         print("Invalid directory.")
         sys.exit(1)
 
-    # Define patterns to ignore
-    ignore_patterns = [
-        r'/third_party/',  # Example: Ignore third-party libraries
-        r'\.generated\.',  # Example: Ignore generated code files
-    ]
+    # Create and configure linter
+    linter = Linter()
+    skip_plugin = SkipPlugin()
+    skip_plugin.add_skip("subprojects/")  # Skip third-party libraries
+    linter.skip_plugin = skip_plugin
 
-    linter = Linter(ignore_patterns=ignore_patterns)
+    # Perform linting
     linter.lint_concurrently(target)
 
+    # Print errors
     if linter.errors:
         for error in linter.errors:
             print(error)
