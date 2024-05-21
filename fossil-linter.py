@@ -17,7 +17,7 @@ class SkipPlugin:
                 return True
         return False
 
-class Linter:
+class CodeFormatterLinter:
     def __init__(self, skip_plugin=None):
         self.errors = []
         self.skip_plugin = skip_plugin
@@ -33,53 +33,30 @@ class Linter:
                 if re.search(r'\s+$', line):
                     errors.append(f"{file_path}: Line {i+1}: Trailing whitespace found")
 
-                # Check for missing semicolon
-                if not line.strip().endswith(';') and not line.strip().startswith('#'):
-                    errors.append(f"{file_path}: Line {i+1}: Missing semicolon")
-
-                # Check indentation
-                if re.match(r'^[ \t]*\S', line) and not re.match(r'^[ \t]*[{}]', line):
-                    errors.append(f"{file_path}: Line {i+1}: Indentation issue")
-
-                # Check for consistent indentation (use spaces only)
+                # Check indentation (use 4 spaces)
                 if re.match(r'^\t', line):
                     errors.append(f"{file_path}: Line {i+1}: Inconsistent indentation, use spaces only")
-
-                # Allow one space around operators
-                operators = ['+', '-', '*', '/', '=', '==', '!=', '<', '>', '<=', '>=']
-                for op in operators:
-                    if re.search(fr'\S{op}\s|\s{op}\S', line) and not re.search(fr'\s{op}\s', line):
-                        errors.append(f"{file_path}: Line {i+1}: Inconsistent spacing around operator '{op}'")
+                elif re.match(r'^( {1,3}|\t+)', line):
+                    errors.append(f"{file_path}: Line {i+1}: Indentation should be 4 spaces")
 
                 # Check line length
                 if len(line.rstrip()) > 80:
                     errors.append(f"{file_path}: Line {i+1}: Line length exceeds 80 characters")
 
-                # Check for banned constructs: goto and gets
-                if re.search(r'\b(?:goto|gets)\b', line):
-                    errors.append(f"{file_path}: Line {i+1}: Banned construct used (goto or gets)")
+                # Check for consistent spacing around operators (one space around operators)
+                operators = ['\+', '-', '\*', '/', '=', '==', '!=', '<', '>', '<=', '>=']
+                for op in operators:
+                    if re.search(fr'\S{op}\s|\s{op}\S', line) and not re.search(fr'\s{op}\s', line):
+                        errors.append(f"{file_path}: Line {i+1}: Inconsistent spacing around operator '{op}'")
+
+                # Check for proper naming conventions (example: camelCase for variables and functions)
+                # Assuming functions and variable names start with lowercase letters and use camelCase
+                if re.search(r'\b[A-Z][a-zA-Z0-9]*\b', line):
+                    errors.append(f"{file_path}: Line {i+1}: Use camelCase naming convention for variables and functions")
 
                 # Check for braces on the same line as control structure
-                if re.search(r'\b(?:if|else|for|while|do)\b', line) and not re.search(r'{\s*$', line):
+                if re.search(r'\b(if|else|for|while|do)\b\s*\(', line) and not re.search(r'{\s*$', line):
                     errors.append(f"{file_path}: Line {i+1}: Braces should be on the same line as control structure")
-
-                # Check for magic numbers
-                if re.search(r'\b\d+\b', line):
-                    errors.append(f"{file_path}: Line {i+1}: Avoid using magic numbers")
-
-                # Enforce consistent naming conventions (example: camelCase)
-                if re.search(r'\b[A-Z][a-zA-Z0-9]*\b', line):
-                    errors.append(f"{file_path}: Line {i+1}: Use camelCase naming convention")
-
-                # Detect unused header files
-                if re.search(r'^#include\s+<([a-zA-Z0-9_]+\.[hH])>', line):
-                    header_file = re.search(r'^#include\s+<([a-zA-Z0-9_]+\.[hH])>', line).group(1)
-                    if not re.search(r'\b{}\b'.format(header_file.split('.')[0]), ''.join(lines[i+1:])):
-                        errors.append(f"{file_path}: Line {i+1}: Unused header file '{header_file}'")
-
-                # Check for redundant code (example: empty if statements)
-                if re.match(r'^\s*if\s*\(\s*.*\s*\)\s*{\s*}\s*$', line):
-                    errors.append(f"{file_path}: Line {i+1}: Redundant code - empty if statement")
 
         self.errors.extend(errors)
 
@@ -123,7 +100,7 @@ class Linter:
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python linter.py <directory>")
+        print("Usage: python code_formatter_linter.py <directory>")
         sys.exit(1)
 
     target = sys.argv[1]
@@ -132,7 +109,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     # Create and configure linter
-    linter = Linter()
+    linter = CodeFormatterLinter()
     skip_plugin = SkipPlugin()
     skip_plugin.add_skip("subprojects/")  # Skip third-party libraries
     linter.skip_plugin = skip_plugin
@@ -146,4 +123,4 @@ if __name__ == "__main__":
             print(error)
         sys.exit(1)
     else:
-        print("No errors found.")
+        print("No formatting issues found.")
