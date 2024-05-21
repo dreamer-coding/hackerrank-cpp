@@ -3,6 +3,7 @@ import sys
 import os
 from threading import Thread
 from queue import Queue
+import subprocess
 
 class SkipPlugin:
     def __init__(self):
@@ -121,6 +122,22 @@ class Linter:
         for thread in threads:
             thread.join()
 
+def create_pr(branch_name, title, body, base="main"):
+    # Create a new branch and switch to it
+    subprocess.run(["git", "checkout", "-b", branch_name], check=True)
+    
+    # Stage all changes
+    subprocess.run(["git", "add", "."], check=True)
+    
+    # Commit changes
+    subprocess.run(["git", "commit", "-m", title], check=True)
+    
+    # Push branch to remote
+    subprocess.run(["git", "push", "origin", branch_name], check=True)
+    
+    # Create PR using GitHub CLI
+    subprocess.run(["gh", "pr", "create", "--title", title, "--body", body, "--base", base], check=True)
+
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: python linter.py <directory>")
@@ -147,3 +164,9 @@ if __name__ == "__main__":
         sys.exit(1)
     else:
         print("No errors found.")
+
+    # If no errors, create a PR with changes
+    branch_name = "auto-lint-improvements"
+    title = "Automated Linting Improvements"
+    body = "This PR includes automated improvements to the source code format based on linting rules."
+    create_pr(branch_name, title, body)
