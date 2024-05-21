@@ -45,10 +45,10 @@ class Linter:
                 if re.match(r'^\t', line):
                     errors.append(f"{file_path}: Line {i+1}: Inconsistent indentation, use spaces only")
 
-                # Check for consistent spacing around operators
+                # Allow one space around operators
                 operators = ['+', '-', '*', '/', '=', '==', '!=', '<', '>', '<=', '>=']
                 for op in operators:
-                    if re.search(fr'\S{op}\s', line) or re.search(fr'\s{op}\S', line):
+                    if re.search(fr'\S{op}\s|\s{op}\S', line) and not re.search(fr'\s{op}\s', line):
                         errors.append(f"{file_path}: Line {i+1}: Inconsistent spacing around operator '{op}'")
 
                 # Check line length
