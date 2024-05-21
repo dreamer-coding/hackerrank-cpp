@@ -81,5 +81,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Generate build file
+      - name: Run code linter
+        run: python security-linter.py .
+      - name: Run security linter
         run: python fossil-linter.py .
