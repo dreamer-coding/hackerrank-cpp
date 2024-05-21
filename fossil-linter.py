@@ -1,8 +1,6 @@
 import re
 import sys
 import os
-import subprocess
-import requests
 from threading import Thread
 from queue import Queue
 
@@ -33,55 +31,55 @@ class Linter:
             for i, line in enumerate(lines):
                 # Check for trailing whitespace
                 if re.search(r'\s+$', line):
-                    errors.append(f"Line {i+1}: Trailing whitespace found")
+                    errors.append(f"{file_path}: Line {i+1}: Trailing whitespace found")
 
                 # Check for missing semicolon
                 if not line.strip().endswith(';') and not line.strip().startswith('#'):
-                    errors.append(f"Line {i+1}: Missing semicolon")
+                    errors.append(f"{file_path}: Line {i+1}: Missing semicolon")
 
                 # Check indentation
                 if re.match(r'^[ \t]*\S', line) and not re.match(r'^[ \t]*[{}]', line):
-                    errors.append(f"Line {i+1}: Indentation issue")
+                    errors.append(f"{file_path}: Line {i+1}: Indentation issue")
 
                 # Check for consistent indentation (use spaces only)
                 if re.match(r'^\t', line):
-                    errors.append(f"Line {i+1}: Inconsistent indentation, use spaces only")
+                    errors.append(f"{file_path}: Line {i+1}: Inconsistent indentation, use spaces only")
 
                 # Check for consistent spacing around operators
                 operators = ['+', '-', '*', '/', '=', '==', '!=', '<', '>', '<=', '>=']
                 for op in operators:
                     if re.search(fr'\S{op}\s', line) or re.search(fr'\s{op}\S', line):
-                        errors.append(f"Line {i+1}: Inconsistent spacing around operator '{op}'")
+                        errors.append(f"{file_path}: Line {i+1}: Inconsistent spacing around operator '{op}'")
 
                 # Check line length
                 if len(line.rstrip()) > 80:
-                    errors.append(f"Line {i+1}: Line length exceeds 80 characters")
+                    errors.append(f"{file_path}: Line {i+1}: Line length exceeds 80 characters")
 
                 # Check for banned constructs: goto and gets
                 if re.search(r'\b(?:goto|gets)\b', line):
-                    errors.append(f"Line {i+1}: Banned construct used (goto or gets)")
+                    errors.append(f"{file_path}: Line {i+1}: Banned construct used (goto or gets)")
 
                 # Check for braces on the same line as control structure
                 if re.search(r'\b(?:if|else|for|while|do)\b', line) and not re.search(r'{\s*$', line):
-                    errors.append(f"Line {i+1}: Braces should be on the same line as control structure")
+                    errors.append(f"{file_path}: Line {i+1}: Braces should be on the same line as control structure")
 
                 # Check for magic numbers
                 if re.search(r'\b\d+\b', line):
-                    errors.append(f"Line {i+1}: Avoid using magic numbers")
+                    errors.append(f"{file_path}: Line {i+1}: Avoid using magic numbers")
 
                 # Enforce consistent naming conventions (example: camelCase)
                 if re.search(r'\b[A-Z][a-zA-Z0-9]*\b', line):
-                    errors.append(f"Line {i+1}: Use camelCase naming convention")
+                    errors.append(f"{file_path}: Line {i+1}: Use camelCase naming convention")
 
                 # Detect unused header files
                 if re.search(r'^#include\s+<([a-zA-Z0-9_]+\.[hH])>', line):
                     header_file = re.search(r'^#include\s+<([a-zA-Z0-9_]+\.[hH])>', line).group(1)
                     if not re.search(r'\b{}\b'.format(header_file.split('.')[0]), ''.join(lines[i+1:])):
-                        errors.append(f"Line {i+1}: Unused header file '{header_file}'")
+                        errors.append(f"{file_path}: Line {i+1}: Unused header file '{header_file}'")
 
                 # Check for redundant code (example: empty if statements)
                 if re.match(r'^\s*if\s*\(\s*.*\s*\)\s*{\s*}\s*$', line):
-                    errors.append(f"Line {i+1}: Redundant code - empty if statement")
+                    errors.append(f"{file_path}: Line {i+1}: Redundant code - empty if statement")
 
         self.errors.extend(errors)
 
@@ -123,29 +121,7 @@ class Linter:
         for thread in threads:
             thread.join()
 
-def create_pr(branch_name, title, body):
-    repo = os.getenv('GITHUB_REPOSITORY')
-    token = os.getenv('GITHUB_TOKEN')
-    if not repo or not token:
-        print("GitHub repository or token not set in environment variables.")
-        return
-
-    url = f"https://api.github.com/repos/{repo}/pulls"
-    headers = {'Authorization': f'token {token}'}
-    data = {
-        'title': title,
-        'head': branch_name,
-        'base': 'main',
-        'body': body
-    }
-
-    response = requests.post(url, headers=headers, json=data)
-    if response.status_code == 201:
-        print(f"Pull request created: {response.json()['html_url']}")
-    else:
-        print(f"Failed to create pull request: {response.status_code}, {response.text}")
-
-def main():
+if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: python linter.py <directory>")
         sys.exit(1)
@@ -168,18 +144,6 @@ def main():
     if linter.errors:
         for error in linter.errors:
             print(error)
-        # Automatically create a PR with changes
-        branch_name = 'auto-lint-fixes'
-        subprocess.run(['git', 'checkout', '-b', branch_name])
-        subprocess.run(['git', 'add', '.'])
-        subprocess.run(['git', 'commit', '-m', 'Auto-lint fixes'])
-        subprocess.run(['git', 'push', 'origin', branch_name])
-        
-        create_pr(branch_name, 'Auto-lint fixes', 'This PR includes automatic lint fixes.')
         sys.exit(1)
     else:
         print("No errors found.")
-        sys.exit(0)
-
-if __name__ == "__main__":
-    main()
