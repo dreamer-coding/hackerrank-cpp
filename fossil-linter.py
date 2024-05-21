@@ -28,7 +28,23 @@ class CodeFormatterLinter:
         errors = []
         with open(file_path, 'r') as file:
             lines = file.readlines()
+            in_block_comment = False
             for i, line in enumerate(lines):
+                stripped_line = line.strip()
+                
+                # Skip block comments
+                if in_block_comment:
+                    if '*/' in stripped_line:
+                        in_block_comment = False
+                    continue
+                elif stripped_line.startswith('/*'):
+                    in_block_comment = True
+                    continue
+                
+                # Skip single-line comments
+                if stripped_line.startswith('//'):
+                    continue
+
                 # Check for trailing whitespace
                 if re.search(r'\s+$', line):
                     errors.append(f"{file_path}: Line {i+1}: Trailing whitespace found")
@@ -49,10 +65,10 @@ class CodeFormatterLinter:
                     if re.search(fr'\S{op}\s|\s{op}\S', line) and not re.search(fr'\s{op}\s', line):
                         errors.append(f"{file_path}: Line {i+1}: Inconsistent spacing around operator '{op}'")
 
-                # Check for proper naming conventions (example: camelCase for variables and functions)
-                # Assuming functions and variable names start with lowercase letters and use camelCase
+                # Enforce snake_case naming conventions for variables and functions
+                # Regex to match camelCase names
                 if re.search(r'\b[A-Z][a-zA-Z0-9]*\b', line):
-                    errors.append(f"{file_path}: Line {i+1}: Use camelCase naming convention for variables and functions")
+                    errors.append(f"{file_path}: Line {i+1}: Use snake_case naming convention for variables and functions")
 
                 # Check for braces on the same line as control structure
                 if re.search(r'\b(if|else|for|while|do)\b\s*\(', line) and not re.search(r'{\s*$', line):
