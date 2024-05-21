@@ -1,9 +1,10 @@
 import re
 import sys
 import os
+import subprocess
+import requests
 from threading import Thread
 from queue import Queue
-import subprocess
 
 class SkipPlugin:
     def __init__(self):
@@ -122,23 +123,29 @@ class Linter:
         for thread in threads:
             thread.join()
 
-def create_pr(branch_name, title, body, base="main"):
-    # Create a new branch and switch to it
-    subprocess.run(["git", "checkout", "-b", branch_name], check=True)
-    
-    # Stage all changes
-    subprocess.run(["git", "add", "."], check=True)
-    
-    # Commit changes
-    subprocess.run(["git", "commit", "-m", title], check=True)
-    
-    # Push branch to remote
-    subprocess.run(["git", "push", "origin", branch_name], check=True)
-    
-    # Create PR using GitHub CLI
-    subprocess.run(["gh", "pr", "create", "--title", title, "--body", body, "--base", base], check=True)
+def create_pr(branch_name, title, body):
+    repo = os.getenv('GITHUB_REPOSITORY')
+    token = os.getenv('GITHUB_TOKEN')
+    if not repo or not token:
+        print("GitHub repository or token not set in environment variables.")
+        return
 
-if __name__ == "__main__":
+    url = f"https://api.github.com/repos/{repo}/pulls"
+    headers = {'Authorization': f'token {token}'}
+    data = {
+        'title': title,
+        'head': branch_name,
+        'base': 'main',
+        'body': body
+    }
+
+    response = requests.post(url, headers=headers, json=data)
+    if response.status_code == 201:
+        print(f"Pull request created: {response.json()['html_url']}")
+    else:
+        print(f"Failed to create pull request: {response.status_code}, {response.text}")
+
+def main():
     if len(sys.argv) != 2:
         print("Usage: python linter.py <directory>")
         sys.exit(1)
@@ -151,7 +158,7 @@ if __name__ == "__main__":
     # Create and configure linter
     linter = Linter()
     skip_plugin = SkipPlugin()
-    skip_plugin.add_skip("third_party/")  # Skip third-party libraries
+    skip_plugin.add_skip("subprojects/")  # Skip third-party libraries
     linter.skip_plugin = skip_plugin
 
     # Perform linting
@@ -161,12 +168,18 @@ if __name__ == "__main__":
     if linter.errors:
         for error in linter.errors:
             print(error)
+        # Automatically create a PR with changes
+        branch_name = 'auto-lint-fixes'
+        subprocess.run(['git', 'checkout', '-b', branch_name])
+        subprocess.run(['git', 'add', '.'])
+        subprocess.run(['git', 'commit', '-m', 'Auto-lint fixes'])
+        subprocess.run(['git', 'push', 'origin', branch_name])
+        
+        create_pr(branch_name, 'Auto-lint fixes', 'This PR includes automatic lint fixes.')
         sys.exit(1)
     else:
         print("No errors found.")
+        sys.exit(0)
 
-    # If no errors, create a PR with changes
-    branch_name = "auto-lint-improvements"
-    title = "Automated Linting Improvements"
-    body = "This PR includes automated improvements to the source code format based on linting rules."
-    create_pr(branch_name, title, body)
+if __name__ == "__main__":
+    main()
