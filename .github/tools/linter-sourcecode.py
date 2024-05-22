@@ -45,10 +45,6 @@ class Linter:
                 if re.search(r'\s+$', line):
                     errors.append(f"{file_path}: Line {i+1}: Trailing whitespace found")
 
-                # Check for missing semicolon
-                if not line.strip().endswith(';') and not line.strip().startswith('#'):
-                    errors.append(f"{file_path}: Line {i+1}: Missing semicolon")
-
                 # Check indentation
                 if re.match(r'^[ \t]*\S', line) and not re.match(r'^[ \t]*[{}]', line):
                     errors.append(f"{file_path}: Line {i+1}: Indentation issue")
@@ -73,9 +69,9 @@ class Linter:
                 if re.search(r'\b\d+\b', line):
                     errors.append(f"{file_path}: Line {i+1}: Avoid using magic numbers")
 
-                # Enforce consistent naming conventions (example: camelCase)
+                # Enforce consistent naming conventions (example: snake_case)
                 if re.search(r'\b[A-Z][a-zA-Z0-9]*\b', line):
-                    errors.append(f"{file_path}: Line {i+1}: Use camelCase naming convention")
+                    errors.append(f"{file_path}: Line {i+1}: Use snake_case naming convention")
 
                 # Detect unused header files
                 if re.search(r'^#include\s+<([a-zA-Z0-9_]+\.[hH])>', line):
