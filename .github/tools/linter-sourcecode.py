@@ -30,7 +30,17 @@ class Linter:
         errors = []
         with open(file_path, 'r') as file:
             lines = file.readlines()
+            in_multiline_comment = False
             for i, line in enumerate(lines):
+                # Check for multiline comments
+                if '/*' in line:
+                    in_multiline_comment = True
+                if '*/' in line:
+                    in_multiline_comment = False
+                    continue
+                if in_multiline_comment:
+                    continue
+
                 # Check for trailing whitespace
                 if re.search(r'\s+$', line):
                     errors.append(f"{file_path}: Line {i+1}: Trailing whitespace found")
