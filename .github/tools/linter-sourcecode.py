@@ -4,6 +4,7 @@ import os
 from threading import Thread
 from queue import Queue
 
+
 class SkipPlugin:
     def __init__(self):
         self.skip_list = []
@@ -16,6 +17,7 @@ class SkipPlugin:
             if path.startswith(skip_path):
                 return True
         return False
+
 
 class Linter:
     def __init__(self, skip_plugin=None):
@@ -120,6 +122,7 @@ class Linter:
             queue.put(None)
         for thread in threads:
             thread.join()
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
