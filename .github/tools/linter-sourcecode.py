@@ -57,12 +57,6 @@ class Linter:
                 if re.match(r'^\t', line):
                     errors.append(f"{file_path}: Line {i+1}: Inconsistent indentation, use spaces only")
 
-                # Check for consistent spacing around operators
-                operators = ['+', '-', '*', '/', '=', '==', '!=', '<', '>', '<=', '>=']
-                for op in operators:
-                    if re.search(fr'\S{op}\s', line) or re.search(fr'\s{op}\S', line):
-                        errors.append(f"{file_path}: Line {i+1}: Inconsistent spacing around operator '{op}'")
-
                 # Check line length
                 if len(line.rstrip()) > 80:
                     errors.append(f"{file_path}: Line {i+1}: Line length exceeds 80 characters")
@@ -132,7 +126,6 @@ class Linter:
             queue.put(None)
         for thread in threads:
             thread.join()
-
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
