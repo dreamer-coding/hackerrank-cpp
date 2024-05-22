@@ -39,3 +39,13 @@ jobs:
 
     - name: Run Directory linter
       run: python .github/tools/linter-directory.py .
+
+  sourcecode_lint:
+    runs-on: ubuntu-latest
+    name: Code Linter
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Run Directory linter
+      run: python .github/tools/linter-sourcecode.py .
