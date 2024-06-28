@@ -13,6 +13,7 @@ Description:
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <random>
 
 using namespace std;
 
@@ -80,15 +81,14 @@ private:
 
 class Network {
 public:
-    static void send_messages(vector<Message> messages, Recipient& recipient) {
-        // Create a random number generator
+    static void send_messages(vector<Message>& messages, Recipient& recipient) {
+        // Simulates the unpredictable network, where sent messages might arrive in unspecified order
+        // Use a random seed based on a random_device
         random_device rd;
-        mt19937 g(rd());
-
-        // Shuffle the messages using the random generator
-        shuffle(messages.begin(), messages.end(), g);
-
-        // Send the shuffled messages
+        default_random_engine rng(rd());
+        
+        shuffle(messages.begin(), messages.end(), rng); // Shuffle messages
+        
         for (auto& msg : messages) {
             recipient.receive(msg);
         }
