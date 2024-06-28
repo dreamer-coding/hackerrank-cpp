@@ -81,15 +81,19 @@ private:
 class Network {
 public:
     static void send_messages(vector<Message> messages, Recipient& recipient) {
-    // simulates the unpredictable network, where sent messages might arrive in unspecified order
-        random_shuffle(messages.begin(), messages.end());         
-        for (auto msg : messages) {
+        // Create a random number generator
+        random_device rd;
+        mt19937 g(rd());
+
+        // Shuffle the messages using the random generator
+        shuffle(messages.begin(), messages.end(), g);
+
+        // Send the shuffled messages
+        for (auto& msg : messages) {
             recipient.receive(msg);
         }
     }
 };
-
-
 
 int main() {
     MessageFactory message_factory;
